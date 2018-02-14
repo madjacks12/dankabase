@@ -23,7 +23,7 @@ $(document).ready(function () {
 		let body = JSON.parse(response);
 		let i = 0;
 		for (i = 0; i < body.length; i++) {
-			$('#flavor-choice').append("<option class='dropdown-menu' value=" + `${body[i]}` + ">" + `${body[i]}` + "</option>");
+			$('#flavor-choice').append("<option value=" + `${body[i]}` + ">" + `${body[i]}` + "</option>");
 		}
 		// $('.flavors').text(`${response}`);
 	}, function (error) {
