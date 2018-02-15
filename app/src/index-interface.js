@@ -19,6 +19,23 @@ $(document).ready(function () {
 		request.send();
 		console.log("request");
 	});
+	//effectsDropdown Promise API
+	let effectsDropdown = new Promise(function (resolve, reject) {
+		let request = new XMLHttpRequest();
+		let url = `http://strainapi.evanbusse.com/ptkY9A6/searchdata/effects`;
+		request.onload = function () {
+			if (this.status === 200) {
+				resolve(request.response);
+				console.log("request.response" + request.response);
+			} else {
+				reject(Error(request.statusText));
+				console.log("request.statusText" + request.statusText);
+			}
+		}
+		request.open("GET", url, true);
+		request.send();
+		console.log("request");
+	});
 	// jQuery Flavor dropdown
 	flavorDropdown.then(function (response) {
 		let body = JSON.parse(response);
@@ -26,7 +43,30 @@ $(document).ready(function () {
 		for (i = 0; i < body.length; i++) {
 			$('#flavor-choice').append("<option value=" + `${body[i]}` + ">" + `${body[i]}` + "</option>");
 		}
-		// $('.flavors').text(`${response}`);
+	}, function (error) {
+		$('.showErrors').text(`There was an error processing your request: ${error.message}`);
+	});
+	// jQuery Effects dropdown
+	effectsDropdown.then(function (response) {
+		let body = JSON.parse(response);
+		let i = 0;
+		for (i = 0; i < body.length; i++) {
+			if (body[i].type == "positive") {
+				$('#effect-choice').append("<option value=" + `${body[i].effect}` + ">" + `${body[i].effect}` + "</option>");
+			}
+		}
+	}, function (error) {
+		$('.showErrors').text(`There was an error processing your request: ${error.message}`);
+	});
+	// jQuery Type dropdown
+	effectsDropdown.then(function (response) {
+		let body = JSON.parse(response);
+		let i = 0;
+		for (i = 0; i < body.length; i++) {
+			if (body[i].type == "medical") {
+				$('#type-choice').append("<option value=" + `${body[i].effect}` + ">" + `${body[i].effect}` + "</option>");
+			}
+		}
 	}, function (error) {
 		$('.showErrors').text(`There was an error processing your request: ${error.message}`);
 	});
@@ -61,7 +101,7 @@ $(document).ready(function () {
 				let i = 0;
 				let body = JSON.parse(response);
 				for (i = 0; i < body.length; i++) {
-					let removeSymbols = body[i].name.replace(/[^a-zA-Z ]/g, "");
+					let removeSymbols = body[i].name.replace(/[^(a-zA-Z)\d\s-]/g, "");
 					let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
 					let leaflyUrl = `https://www.leafly.com/` + `${body[i].race}` + `/` + parseName;
 					$('#table').append('<tr><td>' + `${body[i].name}` + '</td><td>' + `${body[i].race}` + '</td><td>' + `${body[i].flavor}` + '</td><td>' + "<a href=" + leaflyUrl + "><button class=btn btn-success> Learn More </button></a>" + '</td></tr>');
