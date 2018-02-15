@@ -1,11 +1,11 @@
-// import * as UrlIfy from './urlify.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+const apiKey = require('./../../.env').apiKey;
 
 $(document).ready(function () {
 	//flavorDropdown Promise API
 	let flavorDropdown = new Promise(function (resolve, reject) {
 		let request = new XMLHttpRequest();
-		let url = `http://strainapi.evanbusse.com/ptkY9A6/searchdata/flavors`;
+		let url = `http://strainapi.evanbusse.com/${apiKey}/searchdata/flavors`;
 		request.onload = function () {
 			if (this.status === 200) {
 				resolve(request.response);
@@ -22,7 +22,7 @@ $(document).ready(function () {
 	//effectsDropdown Promise API
 	let effectsDropdown = new Promise(function (resolve, reject) {
 		let request = new XMLHttpRequest();
-		let url = `http://strainapi.evanbusse.com/ptkY9A6/searchdata/effects`;
+		let url = `http://strainapi.evanbusse.com/${apiKey}/searchdata/effects`;
 		request.onload = function () {
 			if (this.status === 200) {
 				resolve(request.response);
@@ -82,7 +82,7 @@ $(document).ready(function () {
 
 		let strainQuery = new Promise(function (resolve, reject) {
 			let request = new XMLHttpRequest();
-			let url = `http://strainapi.evanbusse.com/ptkY9A6/strains/search/flavor/` + `${flavor}`;
+			let url = `http://strainapi.evanbusse.com/${apiKey}/strains/search/flavor/` + `${flavor}`;
 			request.onload = function () {
 				if (this.status === 200) {
 					resolve(request.response);
