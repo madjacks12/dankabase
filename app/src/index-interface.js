@@ -2,10 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { flavorDropdown } from './api_calls/dropdown.flavors.js';
 import { effectsDropdown } from './api_calls/dropdown.effects.js';
 import { flavorQuery } from './api_calls/query.flavors.js';
+import { filterAll } from './api_calls/filter.all.js';
 
 $(document).ready(function () { // jQuery Flavor dropdown
 	let flavors = flavorDropdown();
 	let effects = effectsDropdown();
+	let filter = filterAll();
 
 	// jQuery flavors dropdown
 	flavors.then(function (response) {
@@ -37,22 +39,28 @@ $(document).ready(function () { // jQuery Flavor dropdown
 		event.preventDefault();
 		$("#table").empty();
 		$("#table").append(`<tr><th>Name</th><th>Race</th><th>Flavor</th><th>More Info</th></tr>`);
-		let flavor = $('#flavor-choice option:selected').text()
-		let queryFlavor = flavorQuery(`${flavor}`);
+		let flavor = $('#flavor-choice option:selected').text();
+		let positiveEffect = $('#effect-choice option:selected').text();
+		let medicalEffect = $('#type-choice option:selected').text();
 
-		queryFlavor.then(function (response) {
+
+		//let queryFlavor = flavorQuery(`${flavor}`);
+		filter.then(function (response) {
 				let i = 0;
 				let body = JSON.parse(response);
-				for (i = 0; i < body.length; i++) {
-					let removeSymbols = body[i].name.replace(/[^(a-zA-Z)\d\s-]/g, "");
-					let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
-					let leaflyUrl = `https://www.leafly.com/${body[i].race}/${parseName}`;
+				let key_strain = Object.keys(body); // Array with all highgest level keys.
+
+				// let removeSymbols = body[i].name.replace(/[^(a-zA-Z)\d\s-]/g, "");
+				// let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
+				// let leaflyUrl = `https://www.leafly.com/${body[i].race}/${parseName}`;
+
+				debugger;
+				for (i = 0; i < key_strain.length; i++) {
 					$('#table').append(`<tr>
-							<td>${body[i].name}</td>
-							<td>${body[i].race}</td>
-							<td>${body[i].flavor}</td>
-							<td><a href=${leaflyUrl}><button class=btn btn-success> Learn More </button></a></td>
-						</tr>`);
+													<td>${key_strain[i]}</td>
+													<td>${key_strain[i]}.race</td>
+													<td>${key_strain[i]}.flavor</td>
+												</tr>`);
 				}
 			},
 			function (error) {
