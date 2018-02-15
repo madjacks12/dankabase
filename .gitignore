@@ -38,3 +38,7 @@ Thumbs.db
 node_modules/
 bower_components/
 dist/
+
+# API Keys #
+############
+*.env
