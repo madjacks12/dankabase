@@ -48,20 +48,28 @@ $(document).ready(function () { // jQuery Flavor dropdown
 		filter.then(function (response) {
 				let i = 0;
 				let body = JSON.parse(response);
-				let key_strain = Object.keys(body); // Array with all highgest level keys.
 
-				// let removeSymbols = body[i].name.replace(/[^(a-zA-Z)\d\s-]/g, "");
-				// let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
-				// let leaflyUrl = `https://www.leafly.com/${body[i].race}/${parseName}`;
+				Object.keys(body).forEach(function (key) {
 
-				debugger;
-				for (i = 0; i < key_strain.length; i++) {
+					let name = key;
+					let race = body[key].race;
+					let flavor = body[key].flavors;
+					let positive = body[key].effects.positive;
+					let medical = body[key].effects.medical;
+
+					let removeSymbols = `${name}`.replace(/[^(a-zA-Z)\d\s-]/g, "");
+					let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
+					let leaflyUrl = `https://www.leafly.com/${race}/${parseName}`;
+
 					$('#table').append(`<tr>
-													<td>${key_strain[i]}</td>
-													<td>${key_strain[i]}.race</td>
-													<td>${key_strain[i]}.flavor</td>
+												<td>${name}</td>
+												<td>${race}</td>
+												<td>${flavor}</td>
+												<td>${positive}</td>
+												<td>${medical}</td>
+												<td>${leaflyUrl}</td>
 												</tr>`);
-				}
+				});
 			},
 			function (error) {
 				$('.showErrors').text(`There was an error processing your request: ${error.message}`);
