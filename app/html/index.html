@@ -6,9 +6,10 @@
     <title>Weed Map</title>
   </head>
 
-  <body background="https://media.giphy.com/media/cpBJJODbvE03S/giphy.gif">
+  <body background="https://images.pexels.com/photos/432722/pexels-photo-432722.jpeg?w=940&h=650&auto=compress&cs=tinysrgb">
 
     <div class="container">
+      <h1>Strain Finder</h1>
 
       <form class="strain-query" action="index.html" method="get">
         <select id="flavor-choice">
@@ -22,9 +23,9 @@
         </select>
         <button type="submit" name="button" class="btn btn-primary">SEARCH</button>
       </form>
-      <br>
 
-      <h1>Strains</h1>
+      <div id="error"></div>
+      <br>
 
       <table style="width:100%" id="table" class="table table-dark">
       </table>

@@ -8,7 +8,6 @@ $(document).ready(function () { // jQuery Flavor dropdown
 	let flavors = flavorDropdown();
 	let effects = effectsDropdown();
 	let filter = filterAll();
-
 	// jQuery flavors dropdown
 	flavors.then(function (response) {
 		let body = JSON.parse(response);
@@ -38,41 +37,45 @@ $(document).ready(function () { // jQuery Flavor dropdown
 	$('.strain-query').submit(function (event) {
 		event.preventDefault();
 		$("#table").empty();
-		$("#table").append(`<tr><th>Name</th><th>Race</th><th>Flavor</th><th>More Info</th></tr>`);
-		let flavor = $('#flavor-choice option:selected').text();
-		let positiveEffect = $('#effect-choice option:selected').text();
-		let medicalEffect = $('#type-choice option:selected').text();
+		$("#table").append(`<tr><th>Name</th><th>Race</th><th>Flavor</th><th>Positive Effects</th><th>Used For</th><th>More Info</th></tr>`);
+		let userFlavor = $('#flavor-choice option:selected').text();
+		let userPositiveEffect = $('#effect-choice option:selected').text();
+		let userMedicalEffect = $('#type-choice option:selected').text();
 
 
 		//let queryFlavor = flavorQuery(`${flavor}`);
 		filter.then(function (response) {
-				let i = 0;
-				let body = JSON.parse(response);
+			let i = 0;
+			let body = JSON.parse(response);
 
-				Object.keys(body).forEach(function (key) {
+			Object.keys(body).forEach(function (key) {
 
 					let name = key;
 					let race = body[key].race;
-					let flavor = body[key].flavors;
-					let positive = body[key].effects.positive;
-					let medical = body[key].effects.medical;
-
+					let flavor = body[key].flavors.toString().replace(/,/g, ', ');
+					let positive = body[key].effects.positive.toString().replace(/,/g, ', ');
+					let medical = body[key].effects.medical.toString().replace(/,/g, ', ');
 					let removeSymbols = `${name}`.replace(/[^(a-zA-Z)\d\s-]/g, "");
 					let parseName = removeSymbols.replace(/\s/g, '-').toLowerCase();
 					let leaflyUrl = `https://www.leafly.com/${race}/${parseName}`;
 
-					$('#table').append(`<tr>
+					if ((flavor.includes(userFlavor) && positive.includes(userPositiveEffect) && medical.includes(userMedicalEffect))) {
+
+						$('#table').append(`<tr>
 												<td>${name}</td>
 												<td>${race}</td>
 												<td>${flavor}</td>
 												<td>${positive}</td>
 												<td>${medical}</td>
-												<td>${leaflyUrl}</td>
+												<td><a href=${leaflyUrl}><button class=btn btn-success> Learn More </button></a></td>
 												</tr>`);
-				});
-			},
-			function (error) {
-				$('.showErrors').text(`There was an error processing your request: ${error.message}`);
-			});
+					} else {
+						$('#error').empty().append(`<h4>Please enter select an option in each box.</h4>`);
+					}
+				},
+				function (error) {
+					$('.showErrors').text(`There was an error processing your request: ${error.message}`);
+				})
+		}); //End of the document.ready function
 	});
-}); //End of the document.ready function
+});
